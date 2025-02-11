@@ -1,0 +1,15 @@
+{
+    "name": "alaric/projet-cms",
+    "autoload": {
+        "psr-4": {
+            "Alaric\\ProjetCms\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Alaric HENROT",
+            "email": "alaric.henrot@gmail.com"
+        }
+    ],
+    "require": {}
+}
