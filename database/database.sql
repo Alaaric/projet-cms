@@ -15,13 +15,14 @@ CREATE TABLE users (
 CREATE TABLE pages (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
+    slug VARCHAR(255) UNIQUE NOT NULL,
     content TEXT NOT NULL,
     user_id CHAR(36) NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
--- INSERT INTO users (email, username, password, role) VALUES 
--- ('admin@example.com', 'admin', '', 'admin');
+INSERT INTO users (email, username, password, role) VALUES 
+('admin@example.com', 'admin', '$2y$10$zTTuXML.ApZmYbEeWZzeSeC0KRDJRrf0OMTWGyxXF9D4Cpa68dxPm', 'admin');
 
 

@@ -6,19 +6,9 @@ use App\Repositories\UserRepository;
 use App\Entities\User;
 
 
-function prompt(string $message, bool $hidden = false): string {
-    echo $message . ": ";
-
-    if ($hidden) { 
-        system('stty -echo');
-        $input = trim(fgets(STDIN));
-        system('stty echo');
-        echo "\n";
-    } else {
-        $input = trim(fgets(STDIN));
-    }
-
-    return $input;
+function input(string $message) {
+    echo $message . "\n";
+    return rtrim(fgets(STDIN));
 }
 
 function selectOption(string $message, array $options): string {
@@ -29,7 +19,7 @@ function selectOption(string $message, array $options): string {
     }
 
     do {
-        $choice = prompt("👉 Entrez le numéro correspondant");
+        $choice = input("👉 Entrez le numéro correspondant");
         if (!array_key_exists($choice, $options)) {
             echo "❌ Sélection invalide, veuillez choisir un numéro valide.\n";
         }
@@ -44,18 +34,18 @@ echo "\n📝 Création d'un nouvel utilisateur\n";
 echo "-----------------------------------\n";
 
 do {
-    $email = prompt("📧 Email");
+    $email = input("📧 Email");
     $existingEmail = $userRepo->findByEmail($email);
     if ($existingEmail) {
         echo "❌ L'email '$email' est déjà utilisé. Veuillez en choisir un autre.\n";
     }
 } while ($existingEmail);
 
-$username = prompt("👤 Nom d'utilisateur");
+$username = input("👤 Nom d'utilisateur");
 
 do {
-    $password = prompt("🔑 Mot de passe", true);
-    $confirmPassword = prompt("🔑 Confirmez le mot de passe", true);
+    $password = input("🔑 Mot de passe");
+    $confirmPassword = input("🔑 Confirmez le mot de passe");
 
     if ($password !== $confirmPassword) {
         echo "❌ Les mots de passe ne correspondent pas. Veuillez réessayer.\n";

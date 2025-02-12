@@ -4,12 +4,15 @@ namespace App\Entities;
 
 class Page {
     public function __construct(
-        private ?int $id = null,
-        private string $title = "",
-        private string $content = ""
+        private string $title,
+        private string $content,
+        private string $userId,
+        private string $slug,
+        private ?string $id = null,
+        private ?string $createdAt = null
     ) {}
 
-    public function getId(): ?int {
+    public function getId(): ?string {
         return $this->id;
     }
 
@@ -17,15 +20,20 @@ class Page {
         return $this->title;
     }
 
-    public function setTitle(string $title): void {
-        $this->title = $title;
-    }
-
     public function getContent(): string {
         return $this->content;
     }
 
-    public function setContent(string $content): void {
-        $this->content = $content;
+    public function getUserId(): string {
+        return $this->userId;
     }
+
+    public function getCreatedAt(): ?string {
+        return $this->createdAt;
+    }
+
+    public function getSlug(): ?string {
+        return $this->slug;
+    }
+
 }

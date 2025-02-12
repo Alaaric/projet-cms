@@ -26,7 +26,7 @@ class UserRepository {
         $stmt->execute([$email]);
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        return $data ? new User($data['id'], $data['email'], $data['username'], $data['password'], $data['role'], $data['created_at']) : null;
+        return $data ? new User($data['email'], $data['username'], $data['password'], $data['role'], $data['id'], $data['created_at']) : null;
     }
 
     public function save(User $user): void {

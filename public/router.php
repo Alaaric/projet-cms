@@ -4,17 +4,16 @@ session_start();
 require_once __DIR__ . "/../vendor/autoload.php";
 
 use App\Core\Router;
-use App\Controllers\PageController;
 
 $router = new Router();
-$controller = new PageController();
 
-$router->get("/", [$controller, "index"]);
-$router->get("/create", [$controller, "create"]);
-$router->post("/create", [$controller, "create"]);
+$router->get("/",  "PageController@index");
+$router->get("/page/{slug}",  "PageController@show");
+$router->get("/create", "PageController@create", "user");
+$router->post("/create", "PageController@create", "user");
 
-$router->get("/login", [$authController, "login"]);
-$router->post("/login", [$authController, "login"]);
-$router->get("/logout", [$authController, "logout"]);
+$router->get("/login",  "AuthController@login");
+$router->post("/login", "AuthController@login");
+$router->get("/logout",  "AuthController@logout", "user");
 
-$router->resolve();
+$router->route($_SERVER['REQUEST_URI']);

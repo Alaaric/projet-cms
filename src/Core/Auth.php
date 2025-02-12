@@ -9,7 +9,7 @@ class Auth {
         }
     }
 
-    public static function login(int $userId, string $username): void {
+    public static function login(string $userId, string $username): void {
         self::startSession();
         $_SESSION['user_id'] = $userId;
         $_SESSION['username'] = $username;

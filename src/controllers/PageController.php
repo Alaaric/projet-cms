@@ -17,12 +17,18 @@ class PageController extends AbstractController {
         $this->render('pages', ['pages' => $pages]);
     }
 
+    public function show(string $slug): void {
+        $page = $this->pageRepo->findBySlug($slug);
+        require_once '../src/views/page.php';
+    }
+
     public function create(): void {
         if ($this->isRequestMethod('POST')) {
-            $page = new Page(null, $this->getInput('title'), $this->getInput('content'));
+            var_dump($this->getInput());
+            $page = new Page( $this->getInput('title'), $this->getInput('content'), $_SESSION['user']['id'], $this->getInput('slug'));
             $this->pageRepo->save($page);
             $this->redirect('/');
         }
-        $this->render('page_form');
+        $this->render('pagesCreation');
     }
 }

@@ -13,6 +13,8 @@
         <nav>
             <a href="/">Accueil</a>
             <a href="/create">Créer une page</a>
+            <a href="/login">Se connecter</a>
+            <a href="/logout">Se déconnecter</a>
         </nav>
     </header>
 

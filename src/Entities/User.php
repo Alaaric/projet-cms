@@ -8,11 +8,11 @@ class User {
         private string $username,
         private string $password,
         private string $role = "user",
-        private ?int $id = null,
+        private ?string $id = null,
         private ?string $createdAt = null
     ) {}
 
-    public function getId(): ?int {
+    public function getId(): ?string {
         return $this->id;
     }
 

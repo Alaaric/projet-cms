@@ -8,11 +8,9 @@ abstract class AbstractController
     protected function render(string $view, array $data = [])
     {
         extract($data);
-
         ob_start();
         require_once "../src/views/$view.php";
         $content = ob_get_clean();
-
         require_once "../src/views/main.php";
     }
     protected function redirect(string $url)
