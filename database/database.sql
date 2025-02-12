@@ -6,7 +6,7 @@ USE  php_poo;
 CREATE TABLE users (
     id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
     email VARCHAR(254) UNIQUE NOT NULL,
-    name VARCHAR(56) NOT NULL,
+    username VARCHAR(56) NOT NULL,
     password CHAR(60) NOT NULL,
     role ENUM('user', 'admin') NOT NULL DEFAULT 'user',
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP

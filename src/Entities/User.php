@@ -4,11 +4,11 @@ namespace App\Entities;
 
 class User {
     public function __construct(
-        private ?int $id = null,
         private string $email,
         private string $username,
         private string $password,
         private string $role = "user",
+        private ?int $id = null,
         private ?string $createdAt = null
     ) {}
 

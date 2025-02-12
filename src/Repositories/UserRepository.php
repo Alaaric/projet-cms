@@ -30,8 +30,8 @@ class UserRepository {
     }
 
     public function save(User $user): void {
-        $stmt = $this->db->prepare("INSERT INTO users (username, password) VALUES (?, ?)");
-        $stmt->execute([$user->getUsername(), $user->getPassword()]);
+        $stmt = $this->db->prepare("INSERT INTO users (email, username, password, role) VALUES (?, ?, ?, ?)");
+        $stmt->execute([$user->getEmail(), $user->getUsername(), $user->getPassword(), $user->getRole()]);
     }
 
     public function deleteUser($userId, $adminId)
