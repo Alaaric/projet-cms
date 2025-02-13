@@ -43,4 +43,12 @@ class AuthController extends AbstractController {
             $this->render('error', ['message' => 'Une erreur est survenue lors de la déconnexion.']);
         }
     }
+
+    public function getUser(): ?array {
+        return $_SESSION['user'] ?? null;
+    }
+
+    public function isAdmin(): bool {
+        return $_SESSION['user']['role'] === 'admin';
+    }
 }

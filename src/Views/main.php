@@ -5,17 +5,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $title ?? "Projet CMS" ?></title>
-    <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
     <header>
         <h1>Projet CMS</h1>
         <nav>
-            <a href="/">Accueil</a>
-            <a href="/create">Créer une page</a>
-            <a href="/login">Se connecter</a>
-            <a href="/logout">Se déconnecter</a>
-        </nav>
+    <a href="/">Accueil</a>
+    
+    <?php if (isset($_SESSION['user'])): ?>
+        <a href="/create">Créer une page</a>
+        <a href="/logout">Se déconnecter</a>
+    <?php else: ?>
+        <a href="/login">Se connecter</a>
+    <?php endif; ?>
+</nav>
+
     </header>
 
     <main>

@@ -9,14 +9,15 @@
 </head>
 <body>
     <header>
-        <h1><?php $page->getTitle() ?></h1>
+        <h1><?= $page->getHeader()->getContent() ?></h1>
     </header>
 
     <main>
-        <?= $page->getContent() ?>
+        <?= $page->getBody()->getContent() ?>
     </main>
 
     <footer>
+    <?= $page->getFooter()->getContent() ?>
         <p>&copy; <?= date("Y") ?> Projet CMS</p>
     </footer>
 </body>

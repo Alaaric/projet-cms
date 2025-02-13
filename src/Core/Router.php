@@ -6,7 +6,7 @@ class Router
 {
     private array $routes = [];
 
-    public function get(string $uri, string $controllerAction, ?string $authorization = null)
+    public function get(string $uri, string $controllerAction, string $authorization = null)
     {
         $this->addRoute('GET', $uri, $controllerAction, $authorization);
     }
