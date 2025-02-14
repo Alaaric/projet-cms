@@ -6,7 +6,7 @@ $tinymceApiKey = $_ENV["TINYMCE_API_KEY"];
 <script>
     tinymce.init({
         selector: '.editor',
-        menubar: false
+        menubar: true
     });
 </script>
 
@@ -23,6 +23,10 @@ $tinymceApiKey = $_ENV["TINYMCE_API_KEY"];
             <textarea class="editor" name="<?= htmlspecialchars($placeholder) ?>"><?= htmlspecialchars(isset($page) ? $page->getContent()[$placeholder] ?? '' : '') ?></textarea>
         <?php endforeach; ?>
     </div>
+
+    <label>Structure complète du template :</label>
+    <textarea class="editor" name="template_structure"><?= htmlspecialchars($template->getStructure()) ?></textarea>
+
 
     <button type="submit">Enregistrer</button>
 </form>
