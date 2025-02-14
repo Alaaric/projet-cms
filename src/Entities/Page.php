@@ -7,10 +7,9 @@ use App\Repositories\PageRepository;
 class Page {
     public function __construct(
         private string $title,
-        private Header $header,
-        private Body $body,
-        private Footer $footer,
+        private array $content,
         private string $userId,
+        private string $templateId,
         private string $slug,
         private ?string $id = null,
         private ?string $createdAt = null
@@ -28,20 +27,20 @@ class Page {
         $this->title = $title;
     }
 
-    public function getHeader(): Header {
-        return $this->header;
-    }
-    
-    public function getBody(): Body {
-        return $this->body;
+    public function getContent(): array {
+        return $this->content;
     }
 
-    public function getFooter(): Footer {
-        return $this->footer;
+    public function setContent(array $content): void {
+        $this->content = $content;
     }
 
     public function getUserId(): string {
         return $this->userId;
+    }
+
+    public function getTemplateId(): string {
+        return $this->templateId;
     }
 
     public function getCreatedAt(): ?string {
@@ -53,7 +52,6 @@ class Page {
     }
 
     public function setSlug(string $slug, PageRepository $pageRepo): void {
-
         $baseSlug = strtolower(trim(preg_replace('/[^a-zA-Z0-9]+/', '-', $slug), '-'));
         $slug = $baseSlug;
         $counter = 1;

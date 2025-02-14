@@ -3,17 +3,20 @@
 namespace App\Controllers;
 
 use App\Repositories\PageRepository;
+use App\Repositories\TemplateRepository;
+use App\Repositories\UserRepository;
 use App\Entities\Page;
-use App\Entities\Header;
-use App\Entities\Body;
-use App\Entities\Footer;
 
 class PageController extends AbstractController {
     private PageRepository $pageRepo;
+    private TemplateRepository $templateRepo;
+    private UserRepository $userRepo;
     private AuthController $auth;
 
     public function __construct() {
         $this->pageRepo = new PageRepository();
+        $this->templateRepo = new TemplateRepository();
+        $this->userRepo = new UserRepository();
         $this->auth = new AuthController();
     }
 
@@ -29,6 +32,12 @@ class PageController extends AbstractController {
             return;
         }
 
+        $template = $this->templateRepo->findById($page->getTemplateId());
+        if (!$template) {
+            $this->render('error', ['message' => 'Template non trouvé.']);
+            return;
+        }
+
         extract(['page' => $page]);
 
         require_once '../src/Views/page.php';
@@ -36,28 +45,46 @@ class PageController extends AbstractController {
     }
 
     public function create(): void {
+        $template = $this->templateRepo->findAll()[0];
+
+        if (!$template) {
+            $this->render('error', ['message' => 'Template non trouvé.']);
+            return;
+        }
+
+        preg_match_all('/{{(.*?)}}/', $template->getStructure(), $matches);
+        $placeholders = $matches[1];
 
         if ($this->isRequestMethod('POST')) {
             $user = $this->auth->getUser();
+
+            $existingUser = $this->userRepo->findById($user['id']);
+            if (!$existingUser) {
+                $this->render('error', ['message' => 'Utilisateur non trouvé.']);
+                return;
+            }
+
+            $content = [];
+            foreach ($placeholders as $placeholder) {
+                $content[$placeholder] = $this->getInput($placeholder);
+            }
+
             $page = new Page(
-                id: null,
                 title: $this->getInput('title'),
                 slug: $this->getInput('slug'),
-                header: new Header($this->getInput('header')),
-                body: new Body($this->getInput('body')),
-                footer: new Footer($this->getInput('footer')),
-                userId: $user['id']
+                content: $content,
+                userId: $user['id'],
+                templateId: $template->getId()
             );
 
             $this->pageRepo->save($page);
             $this->redirect('/');
         }
 
-        $this->render('pagesCreation');
+        $this->render('pagesCreation', ['placeholders' => $placeholders]);
     }
 
     public function edit(string $slug): void {
-
         $page = $this->pageRepo->findBySlug($slug);
         if (!$page) {
             die("Page introuvable.");
@@ -70,24 +97,30 @@ class PageController extends AbstractController {
             die("Vous ne pouvez pas modifier cette page.");
         }
 
+        $template = $this->templateRepo->findById($page->getTemplateId());
+
+        if (!$template) {
+            $this->render('error', ['message' => 'Template non trouvé.']);
+            return;
+        }
+
+        preg_match_all('/{{(.*?)}}/', $template->getStructure(), $matches);
+        $placeholders = $matches[1];
+
         if ($this->isRequestMethod('POST')) {
-            $page->setTitle($this->getInput('title'));
-            $page->setSlug($this->getInput('slug', ), $this->pageRepo);
-
-            $page->getHeader()->setContent($this->getInput('header'));
-            $page->getBody()->setContent($this->getInput('body'));
-            $page->getFooter()->setContent($this->getInput('footer'));
-
-            if ($isAdmin) {
-                $page->getHeader()->setStructure($this->getInput('header_structure') ?: null);
-                $page->getBody()->setStructure($this->getInput('body_structure') ?: null);
-                $page->getFooter()->setStructure($this->getInput('footer_structure') ?: null);
+            $content = [];
+            foreach ($placeholders as $placeholder) {
+                $content[$placeholder] = $this->getInput($placeholder);
             }
+
+            $page->setTitle($this->getInput('title'));
+            $page->setSlug($this->getInput('slug'), $this->pageRepo);
+            $page->setContent($content);
 
             $this->pageRepo->save($page);
             $this->redirect("/page/" . $page->getSlug());
         }
 
-        $this->render('pageCreation', ['page' => $page, 'isAdmin' => $isAdmin]);
+        $this->render('pagesCreation', ['page' => $page, 'placeholders' => $placeholders]);
     }
 }

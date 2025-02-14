@@ -28,7 +28,7 @@ class UserRepository {
         ), $usersData);
     }
 
-    public function findById(int $id): ?User {
+    public function findById(string $id): ?User {
         $stmt = $this->db->prepare("SELECT * FROM users WHERE id = ?");
         $stmt->execute([$id]);
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
