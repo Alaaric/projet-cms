@@ -15,6 +15,9 @@
     <?php if (isset($_SESSION['user'])): ?>
         <a href="/create">Créer une page</a>
         <a href="/logout">Se déconnecter</a>
+        <?php if ($_SESSION['user']['role'] === 'admin'): ?>
+            <a href="/admin/dashboard">Dashboard</a>
+        <?php endif; ?>
     <?php else: ?>
         <a href="/login">Se connecter</a>
     <?php endif; ?>

@@ -1,6 +1,20 @@
-<h2>🛠️ Gestion des pages</h2>
+<?php
+$tinymceApiKey = $_ENV["TINYMCE_API_KEY"];
+?>
 
-<table border="1">
+<script src="https://cdn.tiny.cloud/1/<?= $tinymceApiKey ?>/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<script>
+    tinymce.init({
+        selector: '.editor-structure',
+        plugins: 'code',
+        toolbar: 'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | code',
+        menubar: true
+    });
+</script>
+
+<h2> Gestion des pages</h2>
+
+<table >
     <thead>
         <tr>
             <th>ID</th>
@@ -18,23 +32,26 @@
                 <td><?= htmlspecialchars($page->getSlug()) ?></td>
                 <td>Utilisateur #<?= $page->getUserId() ?></td>
                 <td>
-                    <a href="/page/<?= $page->getSlug() ?>">👁️ Voir</a>
-                    <a href="/page/edit/<?= $page->getSlug() ?>">✏️ Modifier</a>
-                    <a href="/admin/delete-page/<?= $page->getSlug() ?>" onclick="return confirm('Supprimer cette page ?')">❌ Supprimer</a>
+                    <a href="/page/<?= $page->getSlug() ?>">Voir</a>
+                    <a href="/page/edit/<?= $page->getSlug() ?>"> Modifier</a>
+                    <form method="POST" action="/admin/delete-page" style="display:inline;">
+                        <input type="hidden" name="slug" value="<?= $page->getSlug() ?>">
+                        <button type="submit" onclick="return confirm('Supprimer cette page ?')">Supprimer</button>
+                    </form>
                 </td>
             </tr>
         <?php endforeach; ?>
     </tbody>
 </table>
 
-<h2>👥 Gestion des utilisateurs</h2>
+<h2> Gestion des utilisateurs</h2>
 
-<table border="1">
+<table>
     <thead>
         <tr>
             <th>ID</th>
             <th>Email</th>
-            <th>Nom d'utilisateur</th>
+            <th>Nom</th>
             <th>Rôle</th>
             <th>Actions</th>
         </tr>
@@ -48,12 +65,24 @@
                 <td><?= htmlspecialchars($user->getRole()) ?></td>
                 <td>
                     <?php if ($user->getId() !== $_SESSION['user']['id']): ?>
-                        <a href="/admin/user/delete/<?= $user->getId() ?>" onclick="return confirm('Supprimer cet utilisateur ?')">❌ Supprimer</a>
+                        <form method="POST" action="/admin/delete-user" style="display:inline;">
+                            <input type="hidden" name="user_id" value="<?= $user->getId() ?>">
+                            <button type="submit" onclick="return confirm('Supprimer cet utilisateur ?')">Supprimer</button>
+                        </form>
                     <?php else: ?>
-                        🔒 (Vous)
+                        Vous ne pouvez pas vous supprimer
                     <?php endif; ?>
                 </td>
             </tr>
         <?php endforeach; ?>
     </tbody>
 </table>
+
+<h2> Édition de la structure du template</h2>
+
+<form method="POST" action="/admin/edit-template-structure">
+    <label>Structure complète du template :</label>
+    <textarea class="editor-structure" name="template_structure"><?= htmlspecialchars($template->getStructure()) ?></textarea>
+
+    <button type="submit">Enregistrer</button>
+</form>

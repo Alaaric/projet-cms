@@ -12,7 +12,8 @@ class Page {
         private string $templateId,
         private string $slug,
         private ?string $id = null,
-        private ?string $createdAt = null
+        private ?string $createdAt = null,
+        private ?string $updatedAt = null
     ) {}
 
     public function getId(): ?string {
@@ -45,6 +46,10 @@ class Page {
 
     public function getCreatedAt(): ?string {
         return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): ?string {
+        return $this->updatedAt;
     }
 
     public function getSlug(): ?string {

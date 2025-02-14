@@ -38,7 +38,8 @@ class PageController extends AbstractController {
             return;
         }
 
-        $this->render('page', ['page' => $page, 'template' => $template]);
+        extract(['page' => $page]);
+        require_once '../src/Views/page.php';
     }
 
     public function create(): void {
@@ -55,7 +56,6 @@ class PageController extends AbstractController {
         if ($this->isRequestMethod('POST')) {
             $user = $this->auth->getUser();
 
-            // Vérifiez que l'utilisateur existe
             $existingUser = $this->userRepo->findById($user['id']);
             if (!$existingUser) {
                 $this->render('error', ['message' => 'Utilisateur non trouvé.']);
@@ -67,8 +67,6 @@ class PageController extends AbstractController {
                 $content[$placeholder] = $this->getInput($placeholder);
             }
 
-            $templateStructure = $this->getInput('template_structure');
-            $template->setStructure($templateStructure);
             $this->templateRepo->save($template);
 
             $page = new Page(
@@ -114,10 +112,6 @@ class PageController extends AbstractController {
             foreach ($placeholders as $placeholder) {
                 $content[$placeholder] = $this->getInput($placeholder);
             }
-
-            $templateStructure = $this->getInput('template_structure');
-            $template->setStructure($templateStructure);
-            $this->templateRepo->save($template);
 
             $page->setTitle($this->getInput('title'));
             $page->setSlug($this->getInput('slug'), $this->pageRepo);

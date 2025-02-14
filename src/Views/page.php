@@ -14,5 +14,9 @@
     }
     echo $structure;
     ?>
+    <footer>
+        <p>Créé le : <?= htmlspecialchars($page->getCreatedAt()) ?></p>
+        <p>Dernière modification : <?= htmlspecialchars($page->getUpdatedAt() ?? $page->getCreatedAt()) ?></p>
+    </footer>
 </body>
 </html>

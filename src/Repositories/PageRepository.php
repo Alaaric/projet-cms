@@ -24,7 +24,8 @@ class PageRepository {
             $data['template_id'],
             $data['slug'],
             $data['id'],
-            $data['created_at']
+            $data['created_at'],
+            $data['updated_at']
         ), $pagesData);
     }
 
@@ -40,13 +41,14 @@ class PageRepository {
             $data['template_id'],
             $data['slug'],
             $data['id'],
-            $data['created_at']
+            $data['created_at'],
+            $data['updated_at']
         ) : null;
     }
 
     public function save(Page $page): void {
         if ($page->getId()) {
-            $stmt = $this->db->prepare("UPDATE pages SET title = ?, slug = ?, content = ?, template_id = ? WHERE id = ?");
+            $stmt = $this->db->prepare("UPDATE pages SET title = ?, slug = ?, content = ?, template_id = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?");
             $stmt->execute([
                 $page->getTitle(),
                 $page->getSlug(),
@@ -66,12 +68,12 @@ class PageRepository {
         }
     }
 
-    public function delete(int $id): void {
+    public function delete(string $id): void {
         $stmt = $this->db->prepare("DELETE FROM pages WHERE id = ?");
         $stmt->execute([$id]);
     }
 
-    public function reassignPages(int $oldUserId, int $newUserId): void {
+    public function reassignPages(string $oldUserId, string $newUserId): void {
         $stmt = $this->db->prepare("UPDATE pages SET user_id = ? WHERE user_id = ?");
         $stmt->execute([$newUserId, $oldUserId]);
     }

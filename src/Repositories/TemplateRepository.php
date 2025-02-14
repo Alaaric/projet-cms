@@ -39,24 +39,12 @@ class TemplateRepository {
     }
 
     public function save(Template $template): void {
-        if ($template->getId()) {
             $stmt = $this->db->prepare("UPDATE templates SET name = ?, structure = ? WHERE id = ?");
             $stmt->execute([
                 $template->getName(),
                 $template->getStructure(),
                 $template->getId()
             ]);
-        } else {
-            $stmt = $this->db->prepare("INSERT INTO templates (name, structure) VALUES (?, ?)");
-            $stmt->execute([
-                $template->getName(),
-                $template->getStructure()
-            ]);
-        }
-    }
-
-    public function delete(string $id): void {
-        $stmt = $this->db->prepare("DELETE FROM templates WHERE id = ?");
-        $stmt->execute([$id]);
+    
     }
 }
