@@ -40,4 +40,4 @@ INSERT INTO users (email, username, password, role) VALUES
 ('user', 'user', '$2y$10$zTTuXML.ApZmYbEeWZzeSeC0KRDJRrf0OMTWGyxXF9D4Cpa68dxPm', 'user');
 
 INSERT INTO templates (name, structure) VALUES
-('Template de base', '<header><h1>{{title}}</h1><nav><a href="/">Accueil</a></nav></header><main>{{mainContent}}</main><footer>{{footerContent}} <p>&copy; <?= date("Y") ?> Projet CMS</p><p>Créé le : {{createdAt}}</p><p>Dernière modification : {{updatedAt}}</p></footer>');
+('Template de base', '<header class="centered"><h1>{{title}}</h1><nav><a href="/">Accueil</a></nav></header><main class="centered">{{mainContent}}</main><footer class="centered">{{footerContent}}<div class="footer-content"><p>&copy; {{currentYear}} Projet CMS</p><p>Créé le : {{createdAt}}</p><p>Dernière modification : {{updatedAt}}</p></div></footer>');

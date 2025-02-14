@@ -3,7 +3,7 @@
     <?php foreach ($pages as $page): ?>
         <li>
             <strong><?= $page->getTitle() ?></strong>
-            <a href=<?= "/page/" . $page->getSlug() ?>>Voir la page</a>
+            <a href=<?= "/page/" . $page->getSlug() ?> class="btn yes">Voir la page</a>
         </li>
     <?php endforeach; ?>
 </ul>

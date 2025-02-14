@@ -20,12 +20,12 @@ $tinymceApiKey = $_ENV["TINYMCE_API_KEY"];
 
     <div id="dynamic-fields">
         <?php foreach ($placeholders as $placeholder): ?>
-            <?php if ($placeholder !== 'createdAt' && $placeholder !== 'updatedAt'): ?>
+            <?php if ($placeholder !== 'createdAt' && $placeholder !== 'updatedAt' && $placeholder !== 'currentYear'): ?>
                 <label><?= htmlspecialchars($placeholder) ?> :</label>
                 <textarea class="editor" name="<?= htmlspecialchars($placeholder) ?>"><?= htmlspecialchars(isset($page) ? $page->getContent()[$placeholder] ?? '' : '') ?></textarea>
             <?php endif; ?>
         <?php endforeach; ?>
     </div>
 
-    <button type="submit">Enregistrer</button>
+    <button type="submit"  class="btn yes">Enregistrer</button>
 </form>

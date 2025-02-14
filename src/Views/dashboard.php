@@ -32,11 +32,11 @@ $tinymceApiKey = $_ENV["TINYMCE_API_KEY"];
                 <td><?= $page->getSlug() ?></td>
                 <td>Utilisateur #<?= $page->getUserId() ?></td>
                 <td>
-                    <a href="/page/<?= $page->getSlug() ?>">Voir</a>
-                    <a href="/page/edit/<?= $page->getSlug() ?>"> Modifier</a>
+                    <a href="/page/<?= $page->getSlug() ?>" class="btn yes">Voir</a>
+                    <a href="/page/edit/<?= $page->getSlug() ?>" class="btn yes"> Modifier</a>
                     <form method="POST" action="/admin/delete-page" style="display:inline;">
                         <input type="hidden" name="slug" value="<?= $page->getSlug() ?>">
-                        <button type="submit" onclick="return confirm('Supprimer cette page ?')">Supprimer</button>
+                        <button type="submit" onclick="return confirm('Supprimer cette page ?')"  class="btn no">Supprimer</button>
                     </form>
                 </td>
             </tr>
@@ -67,7 +67,7 @@ $tinymceApiKey = $_ENV["TINYMCE_API_KEY"];
                     <?php if ($user->getId() !== $_SESSION['user']['id']): ?>
                         <form method="POST" action="/admin/delete-user" style="display:inline;">
                             <input type="hidden" name="user_id" value="<?= $user->getId() ?>">
-                            <button type="submit" onclick="return confirm('Supprimer cet utilisateur ?')">Supprimer</button>
+                            <button type="submit" onclick="return confirm('Supprimer cet utilisateur ?')"  class="btn no">Supprimer</button>
                         </form>
                     <?php else: ?>
                         Vous ne pouvez pas vous supprimer
@@ -84,5 +84,5 @@ $tinymceApiKey = $_ENV["TINYMCE_API_KEY"];
     <label>Structure complète du template :</label>
     <textarea class="editor-structure" name="template_structure"><?= $template->getStructure() ?></textarea>
 
-    <button type="submit">Enregistrer</button>
+    <button type="submit"  class="btn yes">Enregistrer</button>
 </form>
