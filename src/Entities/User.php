@@ -24,24 +24,12 @@ class User {
         return $this->username;
     }
 
-    public function setUsername(string $username): void {
-        $this->username = $username;
-    }
-
     public function getPassword(): string {
         return $this->password;
     }
 
-    public function setPassword(string $password): void {
-        $this->password = password_hash($password, PASSWORD_DEFAULT);
-    }
-
     public function getRole(): string {
         return $this->role;
-    }
-
-    public function setRole(string $role): void {
-        $this->role = $role;
     }
 
     public function getCreatedAt(): ?string {
