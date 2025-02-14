@@ -10,13 +10,15 @@
     <?php
     $structure = $template->getStructure();
     foreach ($page->getContent() as $placeholder => $value) {
-        $structure = str_replace('{{' . $placeholder . '}}', htmlspecialchars($value), $structure);
+        if ($placeholder === 'createdAt') {
+            $structure = str_replace('{{createdAt}}', $page->getCreatedAt(), $structure);
+        } elseif ($placeholder === 'updatedAt') {
+            $structure = str_replace('{{updatedAt}}', $page->getUpdatedAt(), $structure);
+        } else {
+            $structure = str_replace('{{' . $placeholder . '}}', $value, $structure);
+        }
     }
     echo $structure;
     ?>
-    <footer>
-        <p>Créé le : <?= htmlspecialchars($page->getCreatedAt()) ?></p>
-        <p>Dernière modification : <?= htmlspecialchars($page->getUpdatedAt() ?? $page->getCreatedAt()) ?></p>
-    </footer>
 </body>
 </html>

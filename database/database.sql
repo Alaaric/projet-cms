@@ -1,3 +1,6 @@
+SET NAMES utf8mb4;
+SET CHARACTER SET utf8mb4;
+SET COLLATION_CONNECTION = 'utf8mb4_unicode_ci';
 DROP DATABASE IF EXISTS php_poo;
 
 CREATE DATABASE php_poo CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -37,4 +40,4 @@ INSERT INTO users (email, username, password, role) VALUES
 ('user', 'user', '$2y$10$zTTuXML.ApZmYbEeWZzeSeC0KRDJRrf0OMTWGyxXF9D4Cpa68dxPm', 'user');
 
 INSERT INTO templates (name, structure) VALUES
-('Template de base', '<header><h1>{{title}}</h1><nav><a href="/">Accueil</a></nav></header><main>{{mainContent}}</main><footer>{{footerContent}} <p>&copy; <?= date("Y") ?> Projet CMS</p></footer>');
+('Template de base', '<header><h1>{{title}}</h1><nav><a href="/">Accueil</a></nav></header><main>{{mainContent}}</main><footer>{{footerContent}} <p>&copy; <?= date("Y") ?> Projet CMS</p><p>Créé le : {{createdAt}}</p><p>Dernière modification : {{updatedAt}}</p></footer>');

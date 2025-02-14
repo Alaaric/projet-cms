@@ -7,8 +7,8 @@ $tinymceApiKey = $_ENV["TINYMCE_API_KEY"];
     tinymce.init({
         selector: '.editor-structure',
         plugins: 'code',
-        toolbar: 'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | code',
-        menubar: true
+        toolbar: 'undo redo | code',
+        menubar: false
     });
 </script>
 
@@ -28,8 +28,8 @@ $tinymceApiKey = $_ENV["TINYMCE_API_KEY"];
         <?php foreach ($pages as $page): ?>
             <tr>
                 <td><?= $page->getId() ?></td>
-                <td><?= htmlspecialchars($page->getTitle()) ?></td>
-                <td><?= htmlspecialchars($page->getSlug()) ?></td>
+                <td><?= $page->getTitle() ?></td>
+                <td><?= $page->getSlug() ?></td>
                 <td>Utilisateur #<?= $page->getUserId() ?></td>
                 <td>
                     <a href="/page/<?= $page->getSlug() ?>">Voir</a>
@@ -82,7 +82,7 @@ $tinymceApiKey = $_ENV["TINYMCE_API_KEY"];
 
 <form method="POST" action="/admin/edit-template-structure">
     <label>Structure complète du template :</label>
-    <textarea class="editor-structure" name="template_structure"><?= htmlspecialchars($template->getStructure()) ?></textarea>
+    <textarea class="editor-structure" name="template_structure"><?= $template->getStructure() ?></textarea>
 
     <button type="submit">Enregistrer</button>
 </form>
