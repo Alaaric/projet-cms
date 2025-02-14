@@ -16,7 +16,7 @@ echo "Database creation in progress..."
 mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASSWORD" < database/database.sql
 
 if [ $? -eq 0 ]; then
-    echo "✅ Success! Database created."
+    echo "Success! Database created."
 else
-    echo "❌ Error : Database creation failed."
+    echo "Error : Database creation failed."
 fi

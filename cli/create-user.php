@@ -19,9 +19,9 @@ function selectOption(string $message, array $options): string {
     }
 
     do {
-        $choice = input("👉 Entrez le numéro correspondant");
+        $choice = input("Entrez le numéro correspondant");
         if (!array_key_exists($choice, $options)) {
-            echo "❌ Sélection invalide, veuillez choisir un numéro valide.\n";
+            echo "Sélection invalide, veuillez choisir un numéro valide.\n";
         }
     } while (!array_key_exists($choice, $options));
 
@@ -30,31 +30,30 @@ function selectOption(string $message, array $options): string {
 
 $userRepo = new UserRepository();
 
-echo "\n📝 Création d'un nouvel utilisateur\n";
-echo "-----------------------------------\n";
+echo "\n Création d'un nouvel utilisateur\n";
 
 do {
-    $email = input("📧 Email");
+    $email = input("Email");
     $existingEmail = $userRepo->findByEmail($email);
     if ($existingEmail) {
-        echo "❌ L'email '$email' est déjà utilisé. Veuillez en choisir un autre.\n";
+        echo "L'email '$email' est déjà utilisé. Veuillez en choisir un autre.\n";
     }
 } while ($existingEmail);
 
-$username = input("👤 Nom d'utilisateur");
+$username = input("Nom d'utilisateur");
 
 do {
-    $password = input("🔑 Mot de passe");
-    $confirmPassword = input("🔑 Confirmez le mot de passe");
+    $password = input("Mot de passe");
+    $confirmPassword = input("Confirmez le mot de passe");
 
     if ($password !== $confirmPassword) {
-        echo "❌ Les mots de passe ne correspondent pas. Veuillez réessayer.\n";
+        echo "Les mots de passe ne correspondent pas. Veuillez réessayer.\n";
     }
 } while ($password !== $confirmPassword);
 
 $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-$role = selectOption("🎭 Sélectionnez un rôle :", [
+$role = selectOption("Sélectionnez un rôle :", [
     1 => "user",
     2 => "admin"
 ]);
@@ -68,4 +67,4 @@ $user = new User(
 
 $userRepo->save($user);
 
-echo "✅ Utilisateur '$username' ($role) créé avec succès ! 🎉\n";
+echo "Utilisateur '$username' ($role) créé avec succès !\n";
