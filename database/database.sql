@@ -17,7 +17,7 @@ CREATE TABLE users (
 
 CREATE TABLE templates (
     id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
-    name VARCHAR(255) NOT NULL,
+    version INT NOT NULL,
     structure TEXT NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
@@ -39,5 +39,5 @@ INSERT INTO users (email, username, password, role) VALUES
 ('admin', 'admin', '$2y$10$zTTuXML.ApZmYbEeWZzeSeC0KRDJRrf0OMTWGyxXF9D4Cpa68dxPm', 'admin'),
 ('user', 'user', '$2y$10$zTTuXML.ApZmYbEeWZzeSeC0KRDJRrf0OMTWGyxXF9D4Cpa68dxPm', 'user');
 
-INSERT INTO templates (name, structure) VALUES
-('Template de base', '<header class="centered"><h1>{{title}}</h1><nav><a href="/">Accueil</a></nav></header><main class="centered">{{mainContent}}</main><footer class="centered">{{footerContent}}<div class="footer-content"><p>&copy; {{currentYear}} Projet CMS</p><p>Créé le : {{createdAt}}</p><p>Dernière modification : {{updatedAt}}</p></div></footer>');
+INSERT INTO templates (version, structure) VALUES
+(1, '<header class="centered"><h1>{{title}}</h1><nav><a href="/">Accueil</a></nav></header><main class="centered">{{mainContent}}</main><footer class="centered">{{footerContent}}<div class="footer-content"><p>&copy; {{currentYear}} Projet CMS</p><p>Créé le : {{createdAt}}</p><p>Dernière modification : {{updatedAt}}</p></div></footer>');

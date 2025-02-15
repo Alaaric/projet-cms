@@ -30,7 +30,7 @@ class AdminController extends AbstractController {
 
             $pages = $this->pageRepo->findAll();
             $users = $this->userRepo->findAll();
-            $template = $this->templateRepo->findAll()[0];
+            $template = $this->templateRepo->findLatest();
 
             $pageDTOs = array_map(fn($page) => new PageDTO(
                 $page->getName(),
@@ -104,13 +104,11 @@ class AdminController extends AbstractController {
         try {
             AuthMiddleware::checkAdmin();
 
-            $template = $this->templateRepo->findAll()[0];
+            $template = $this->templateRepo->findLatest();
 
             if ($this->isRequestMethod(self::METHOD_POST)) {
-                $templateStructure = $this->getInput('template_structure');
                 $templateInputDTO = new TemplateInputDTO(
-                    $template->getName(),
-                    $templateStructure
+                    $this->getInput('template_structure')
                 );
                 $this->templateRepo->update($template->getId(), $templateInputDTO);
                 $this->redirect('/admin/dashboard');

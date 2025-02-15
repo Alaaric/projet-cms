@@ -40,13 +40,13 @@ class PageController extends AbstractController {
                 return;
             }
 
-            // $template = $this->templateRepo->findById($page->getTemplateId());
-            // if (!$template) {
-            //     $this->render('error', ['message' => 'Template non trouvé.']);
-            //     return;
-            // }
+            $template = $this->templateRepo->findById($page->getTemplateId());
+            if (!$template) {
+                $this->render('error', ['message' => 'Template non trouvé.']);
+                return;
+            }
 
-            extract(['page' => $page]);
+            extract(['page' => $page, 'template' => $template]);
             require_once '../src/Views/page.php';
         } catch (Exception $e) {
             $this->render('error', ['message' => "Erreur lors de l'affichage de la page : " . $e->getMessage()]);
@@ -63,7 +63,7 @@ class PageController extends AbstractController {
                 return;
             }
 
-            $template = $this->templateRepo->findAll()[0];
+            $template = $this->templateRepo->findLatest();
 
             if (!$template) {
                 $this->render('error', ['message' => 'Template non trouvé.']);

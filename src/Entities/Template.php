@@ -4,7 +4,7 @@ namespace App\Entities;
 
 class Template {
     public function __construct(
-        private string $name,
+        private int $version,
         private string $structure,
         private ?string $id = null,
         private ?string $createdAt = null
@@ -14,8 +14,8 @@ class Template {
         return $this->id;
     }
 
-    public function getName(): string {
-        return $this->name;
+    public function getVersion(): int {
+        return $this->version;
     }
 
     public function getStructure(): string {

@@ -16,19 +16,19 @@ class TemplateRepository {
         $this->db = Database::getInstance();
     }
 
-    public function findAll(): array {
+    public function findLatest(): Template {
         try {
-            $stmt = $this->db->query("SELECT * FROM templates");
-            $templatesData = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $stmt = $this->db->query("SELECT * FROM templates ORDER BY created_at DESC LIMIT 1");
+            $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            return array_map(fn($data) => new Template(
-                $data['name'],
+            return new Template(
+                $data['version'],
                 $data['structure'],
                 $data['id'],
                 $data['created_at']
-            ), $templatesData);
+            );
         } catch (PDOException $e) {
-            throw new TemplateRepositoryException("Erreur lors de la récupération des templates : " . $e->getMessage());
+            throw new TemplateRepositoryException("Erreur lors de la récupération du dernier template : " . $e->getMessage());
         }
     }
 
@@ -43,7 +43,7 @@ class TemplateRepository {
             }
 
             return new Template(
-                $data['name'],
+                $data['version'],
                 $data['structure'],
                 $data['id'],
                 $data['created_at']
@@ -55,11 +55,16 @@ class TemplateRepository {
 
     public function update(string $id, TemplateInputDTO $templateInputDTO): void {
         try {
-            $stmt = $this->db->prepare("UPDATE templates SET name = ?, structure = ? WHERE id = ?");
+            $stmt = $this->db->prepare("SELECT version FROM templates WHERE id = ?");
+            $stmt->execute([$id]);
+            $currentVersion = $stmt->fetchColumn();
+    
+            $newVersion = $currentVersion + 1;
+    
+            $stmt = $this->db->prepare("INSERT INTO templates (version, structure ) VALUES (?, ?)");
             $stmt->execute([
-                $templateInputDTO->getName(),
-                $templateInputDTO->getStructure(),
-                $id
+                $newVersion,
+                $templateInputDTO->getStructure()
             ]);
         } catch (PDOException $e) {
             throw new TemplateRepositoryException("Erreur lors de la mise à jour du template : " . $e->getMessage());
