@@ -9,26 +9,27 @@ use App\Repositories\UserRepository;
 use App\Repositories\PageRepository;
 use App\Repositories\TemplateRepository;
 use App\Middleware\AuthMiddleware;
+use App\Services\PageService;
 use Exception;
 
 class AdminController extends AbstractController {
     private UserRepository $userRepo;
-    private PageRepository $pageRepo;
     private TemplateRepository $templateRepo;
+    private PageService $pageService;
     private AuthController $auth;
 
     public function __construct() {
         $this->userRepo = new UserRepository();
-        $this->pageRepo = new PageRepository();
         $this->templateRepo = new TemplateRepository();
         $this->auth = new AuthController();
+        $this->pageService = new PageService(new PageRepository(), $this->templateRepo, $this->userRepo);
     }
 
     public function dashboard(): void {
         try {
             AuthMiddleware::checkAdmin();
 
-            $pages = $this->pageRepo->findAll();
+            $pages = $this->pageService->findAll();
             $users = $this->userRepo->findAll();
             $template = $this->templateRepo->findLatest();
 
@@ -74,7 +75,7 @@ class AdminController extends AbstractController {
                 return;
             }
 
-            $this->pageRepo->reassignPages($userId, $admin->getId());
+            $this->pageService->reassignPages($userId, $admin->getId());
             $this->userRepo->delete($userId);
             $this->redirect('/admin/dashboard');
         } catch (Exception $e) {
@@ -87,13 +88,13 @@ class AdminController extends AbstractController {
             AuthMiddleware::checkAdmin();
 
             $slug = $this->getInput(self::INPUT_KEY_SLUG);
-            $page = $this->pageRepo->findBySlug($slug);
+            $page = $this->pageService->findBySlug($slug);
             if (!$page) {
                 $this->render('404');
                 return;
             }
 
-            $this->pageRepo->delete($page->getId());
+            $this->pageService->deletePage($page->getId());
             $this->redirect('/admin/dashboard');
         } catch (Exception $e) {
             $this->render('error', ['message' => "Erreur lors de la suppression de la page : " . $e->getMessage(), 'code' => 500]);

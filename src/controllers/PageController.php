@@ -7,25 +7,26 @@ use App\DTO\Inputs\PageInputDTO;
 use App\Repositories\PageRepository;
 use App\Repositories\TemplateRepository;
 use App\Repositories\UserRepository;
+use App\Services\PageService;
 use App\Middleware\AuthMiddleware;
 use Exception;
 
 class PageController extends AbstractController {
-    private PageRepository $pageRepo;
+    private PageService $pageService;
     private TemplateRepository $templateRepo;
     private UserRepository $userRepo;
     private AuthController $auth;
 
     public function __construct() {
-        $this->pageRepo = new PageRepository();
         $this->templateRepo = new TemplateRepository();
         $this->userRepo = new UserRepository();
         $this->auth = new AuthController();
+        $this->pageService = new PageService(new PageRepository(), $this->templateRepo, $this->userRepo);
     }
 
     public function index(): void {
         try {
-            $pages = $this->pageRepo->findAll();
+            $pages = $this->pageService->findAll();
             $this->render('pages', ['pages' => $pages]);
         } catch (Exception $e) {
             $this->render('error', ['message' => "Erreur lors de la récupération des pages : " . $e->getMessage()]);
@@ -34,7 +35,7 @@ class PageController extends AbstractController {
 
     public function show(string $slug): void {
         try {
-            $page = $this->pageRepo->findBySlug($slug);
+            $page = $this->pageService->findBySlug($slug);
             if (!$page) {
                 $this->render('404', ['message' => 'Page non trouvée.']);
                 return;
@@ -93,7 +94,7 @@ class PageController extends AbstractController {
                     $template->getId()
                 );
 
-                $this->pageRepo->save($pageInputDTO);
+                $this->pageService->createPage($pageInputDTO);
                 $this->redirect("/page/" . $pageInputDTO->getSlug());
             }
 
@@ -113,7 +114,7 @@ class PageController extends AbstractController {
                 return;
             }
 
-            $page = $this->pageRepo->findBySlug($slug);
+            $page = $this->pageService->findBySlug($slug);
             if (!$page) {
                 $this->render('error', ['message' => 'Page introuvable.']);
                 return;
@@ -148,7 +149,7 @@ class PageController extends AbstractController {
                     $template->getId()
                 );
 
-                $this->pageRepo->update($page->getId(), $pageInputDTO);
+                $this->pageService->updatePage($page->getId(), $pageInputDTO);
                 $this->redirect("/page/" . $pageInputDTO->getSlug());
             }
 
