@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\DTO\UserDTO;
 use App\Repositories\UserRepository;
+use App\Middleware\AuthMiddleware;
 use Exception;
 
 class AuthController extends AbstractController {
@@ -38,6 +39,8 @@ class AuthController extends AbstractController {
 
     public function logout(): void {
         try {
+            AuthMiddleware::checkAuthenticated();
+
             session_unset();
             session_destroy();
             $this->render('login');
@@ -57,9 +60,5 @@ class AuthController extends AbstractController {
             );
         }
         return null;
-    }
-
-    public function isAdmin(): bool {
-        return (isset($_SESSION['user']) && $_SESSION['user']['role'] === 'admin');
     }
 }

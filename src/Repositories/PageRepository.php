@@ -36,6 +36,31 @@ class PageRepository {
         }
     }
 
+    public function findById(string $id): ?Page {
+        try {
+            $stmt = $this->db->prepare("SELECT * FROM pages WHERE id = ?");
+            $stmt->execute([$id]);
+            $data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$data) {
+                throw new PageRepositoryException("Page non trouvée avec l'ID : $id");
+            }
+
+            return new Page(
+                $data['name'],
+                json_decode($data['content'], true) ?? [],
+                $data['user_id'],
+                $data['template_id'],
+                $data['slug'],
+                $data['id'],
+                $data['created_at'],
+                $data['updated_at']
+            );
+        } catch (PDOException $e) {
+            throw new PageRepositoryException("Erreur lors de la récupération de la page : " . $e->getMessage());
+        }
+    }
+
     public function findBySlug(string $slug): ?Page {
         try {
             $stmt = $this->db->prepare("SELECT * FROM pages WHERE slug = ?");

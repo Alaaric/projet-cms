@@ -8,13 +8,14 @@ use App\DTO\Inputs\TemplateInputDTO;
 use App\Repositories\UserRepository;
 use App\Repositories\PageRepository;
 use App\Repositories\TemplateRepository;
+use App\Middleware\AuthMiddleware;
 use Exception;
 
 class AdminController extends AbstractController {
     private UserRepository $userRepo;
     private PageRepository $pageRepo;
-    private AuthController $auth;
     private TemplateRepository $templateRepo;
+    private AuthController $auth;
 
     public function __construct() {
         $this->userRepo = new UserRepository();
@@ -25,10 +26,7 @@ class AdminController extends AbstractController {
 
     public function dashboard(): void {
         try {
-            if (!$this->auth->isAdmin()) {
-                $this->render('403');
-                return;
-            }
+            AuthMiddleware::checkAdmin();
 
             $pages = $this->pageRepo->findAll();
             $users = $this->userRepo->findAll();
@@ -61,10 +59,7 @@ class AdminController extends AbstractController {
 
     public function deleteUser(): void {
         try {
-            if (!$this->auth->isAdmin()) {
-                $this->render('403');
-                return;
-            }
+            AuthMiddleware::checkAdmin();
 
             $userId = $this->getInput('user_id');
             $user = $this->userRepo->findById($userId);
@@ -89,10 +84,7 @@ class AdminController extends AbstractController {
 
     public function deletePage(): void {
         try {
-            if (!$this->auth->isAdmin()) {
-                $this->render('error', ['message' => "Accès refusé!", 'code' => 403]);
-                return;
-            }
+            AuthMiddleware::checkAdmin();
 
             $slug = $this->getInput('slug');
             $page = $this->pageRepo->findBySlug($slug);
@@ -110,10 +102,7 @@ class AdminController extends AbstractController {
 
     public function editTemplateStructure(): void {
         try {
-            if (!$this->auth->isAdmin()) {
-                $this->render('error', ['message' => "Accès refusé!", 'code' => 403]);
-                return;
-            }
+            AuthMiddleware::checkAdmin();
 
             $template = $this->templateRepo->findAll()[0];
 

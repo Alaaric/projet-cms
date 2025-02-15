@@ -7,6 +7,7 @@ use App\DTO\Inputs\PageInputDTO;
 use App\Repositories\PageRepository;
 use App\Repositories\TemplateRepository;
 use App\Repositories\UserRepository;
+use App\Middleware\AuthMiddleware;
 use Exception;
 
 class PageController extends AbstractController {
@@ -54,6 +55,7 @@ class PageController extends AbstractController {
 
     public function create(): void {
         try {
+            AuthMiddleware::checkAuthenticated();
 
             $user = $this->auth->getUser();
             if (!$user) {
@@ -78,12 +80,6 @@ class PageController extends AbstractController {
                     return;
                 }
 
-                $slug = $this->getInput('slug');
-                if ($this->pageRepo->slugExists($slug)) {
-                    $this->render('error', ['message' => 'Le slug existe déjà. Veuillez en choisir un autre.']);
-                    return;
-                }
-
                 $content = [];
                 foreach ($placeholders as $placeholder) {
                     $content[$placeholder] = $this->getInput($placeholder);
@@ -91,7 +87,7 @@ class PageController extends AbstractController {
 
                 $pageInputDTO = new PageInputDTO(
                     $this->getInput('name'),
-                    $slug,
+                    $this->getInput('slug'),
                     $content,
                     $user->getId(),
                     $template->getId()
@@ -109,7 +105,8 @@ class PageController extends AbstractController {
 
     public function edit(string $slug): void {
         try {
-            
+            AuthMiddleware::checkAuthenticated();
+
             $user = $this->auth->getUser();
             if (!$user) {
                 $this->render('403', ['message' => 'Vous devez être connecté pour modifier une page.']);
@@ -122,9 +119,8 @@ class PageController extends AbstractController {
                 return;
             }
 
-            $isAdmin = $this->auth->isAdmin();
+            if (!AuthMiddleware::isAdmin() && !AuthMiddleware::isOwner($page->getId())) {
 
-            if (!$isAdmin && $page->getUserId() !== $user->getId()) {
                 $this->render('error', ['message' => 'Vous ne pouvez pas modifier cette page.']);
                 return;
             }
@@ -140,12 +136,6 @@ class PageController extends AbstractController {
             $placeholders = $matches[1];
 
             if ($this->isRequestMethod('POST')) {
-                $newSlug = $this->getInput('slug');
-                if ($this->pageRepo->slugExists($newSlug, $page->getId())) {
-                    $this->render('error', ['message' => 'Le slug existe déjà. Veuillez en choisir un autre.']);
-                    return;
-                }
-
                 $content = [];
                 foreach ($placeholders as $placeholder) {
                     $content[$placeholder] = $this->getInput($placeholder);
@@ -153,7 +143,7 @@ class PageController extends AbstractController {
 
                 $pageInputDTO = new PageInputDTO(
                     $this->getInput('name'),
-                    $newSlug,
+                    $this->getInput('slug'),
                     $content,
                     $user->getId(),
                     $template->getId()
