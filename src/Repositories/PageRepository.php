@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Core\Database;
+use App\DTO\Inputs\PageInputDTO;
 use App\Entities\Page;
 use App\Exceptions\Repositories\PageRepositoryException;
 use PDO;
@@ -60,30 +61,27 @@ class PageRepository {
         }
     }
 
-    public function save(Page $page): void {
-        try {
-            if ($page->getId()) {
-                $stmt = $this->db->prepare("UPDATE pages SET name = ?, slug = ?, content = ?, template_id = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?");
-                $stmt->execute([
-                    $page->getName(),
-                    $page->getSlug(),
-                    json_encode($page->getContent()),
-                    $page->getTemplateId(),
-                    $page->getId()
-                ]);
-            } else {
-                $stmt = $this->db->prepare("INSERT INTO pages (name, slug, content, user_id, template_id) VALUES (?, ?, ?, ?, ?)");
-                $stmt->execute([
-                    $page->getName(),
-                    $page->getSlug(),
-                    json_encode($page->getContent()),
-                    $page->getUserId(),
-                    $page->getTemplateId()
-                ]);
-            }
-        } catch (PDOException $e) {
-            throw new PageRepositoryException("Erreur lors de l'enregistrement de la page : " . $e->getMessage());
-        }
+    public function save(PageInputDTO $pageInputDTO): void {
+        $stmt = $this->db->prepare('INSERT INTO pages (name, slug, content, user_id, template_id) VALUES (:name, :slug, :content, :user_id, :template_id)');
+        $stmt->execute([
+            'name' => $pageInputDTO->getName(),
+            'slug' => $pageInputDTO->getSlug(),
+            'content' => json_encode($pageInputDTO->getContent()),
+            'user_id' => $pageInputDTO->getUserId(),
+            'template_id' => $pageInputDTO->getTemplateId()
+        ]);
+    }
+
+    public function update(string $id, PageInputDTO $pageInputDTO): void {
+        $stmt = $this->db->prepare('UPDATE pages SET name = :name, slug = :slug, content = :content, user_id = :user_id, template_id = :template_id WHERE id = :id');
+        $stmt->execute([
+            'name' => $pageInputDTO->getName(),
+            'slug' => $pageInputDTO->getSlug(),
+            'content' => json_encode($pageInputDTO->getContent()),
+            'user_id' => $pageInputDTO->getUserId(),
+            'template_id' => $pageInputDTO->getTemplateId(),
+            'id' => $id
+        ]);
     }
 
     public function delete(string $id): void {

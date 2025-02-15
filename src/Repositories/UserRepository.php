@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Core\Database;
 use App\Entities\User;
+use App\DTO\Inputs\UserInputDTO;
 use App\Exceptions\Repositories\UserRepositoryException;
 use PDO;
 use PDOException;
@@ -64,7 +65,7 @@ class UserRepository {
             $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if (!$data) {
-                throw new UserRepositoryException("Utilisateur non trouvé avec l'email : $email");
+                return null;
             }
 
             return new User(
@@ -80,10 +81,15 @@ class UserRepository {
         }
     }
 
-    public function save(User $user): void {
+    public function save(UserInputDTO $userInputDTO): void {
         try {
             $stmt = $this->db->prepare("INSERT INTO users (email, username, password, role) VALUES (?, ?, ?, ?)");
-            $stmt->execute([$user->getEmail(), $user->getUsername(), $user->getPassword(), $user->getRole()]);
+            $stmt->execute([
+                $userInputDTO->getEmail(),
+                $userInputDTO->getUsername(),
+                $userInputDTO->getPassword(),
+                $userInputDTO->getRole()
+            ]);
         } catch (PDOException $e) {
             throw new UserRepositoryException("Erreur lors de l'enregistrement de l'utilisateur : " . $e->getMessage());
         }

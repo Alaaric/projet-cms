@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Core\Database;
 use App\Entities\Template;
+use App\DTO\Inputs\TemplateInputDTO;
 use App\Exceptions\Repositories\TemplateRepositoryException;
 use PDO;
 use PDOException;
@@ -52,16 +53,16 @@ class TemplateRepository {
         }
     }
 
-    public function save(Template $template): void {
+    public function update(string $id, TemplateInputDTO $templateInputDTO): void {
         try {
             $stmt = $this->db->prepare("UPDATE templates SET name = ?, structure = ? WHERE id = ?");
             $stmt->execute([
-                $template->getName(),
-                $template->getStructure(),
-                $template->getId()
+                $templateInputDTO->getName(),
+                $templateInputDTO->getStructure(),
+                $id
             ]);
         } catch (PDOException $e) {
-            throw new TemplateRepositoryException("Erreur lors de l'enregistrement du template : " . $e->getMessage());
+            throw new TemplateRepositoryException("Erreur lors de la mise à jour du template : " . $e->getMessage());
         }
     }
 }

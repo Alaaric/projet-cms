@@ -2,10 +2,11 @@
 
 namespace App\Controllers;
 
+use App\DTO\PageDTO;
+use App\DTO\Inputs\PageInputDTO;
 use App\Repositories\PageRepository;
 use App\Repositories\TemplateRepository;
 use App\Repositories\UserRepository;
-use App\Entities\Page;
 use Exception;
 
 class PageController extends AbstractController {
@@ -71,8 +72,7 @@ class PageController extends AbstractController {
             $placeholders = $matches[1];
 
             if ($this->isRequestMethod('POST')) {
-
-                $existingUser = $this->userRepo->findById($user['id']);
+                $existingUser = $this->userRepo->findById($user->getId());
                 if (!$existingUser) {
                     $this->render('error', ['message' => 'Utilisateur non trouvé.']);
                     return;
@@ -83,18 +83,16 @@ class PageController extends AbstractController {
                     $content[$placeholder] = $this->getInput($placeholder);
                 }
 
-                $this->templateRepo->save($template);
-
-                $page = new Page(
-                    name: $this->getInput('name'),
-                    slug: $this->getInput('slug'),
-                    content: $content,
-                    userId: $user['id'],
-                    templateId: $template->getId()
+                $pageInputDTO = new PageInputDTO(
+                    $this->getInput('name'),
+                    $this->getInput('slug'),
+                    $content,
+                    $user->getId(),
+                    $template->getId()
                 );
 
-                $this->pageRepo->save($page);
-                $this->redirect("/page/" . $page->getSlug());
+                $this->pageRepo->save($pageInputDTO);
+                $this->redirect("/page/" . $pageInputDTO->getSlug());
             }
 
             $this->render('pagesCreation', ['placeholders' => $placeholders, 'template' => $template]);
@@ -120,7 +118,7 @@ class PageController extends AbstractController {
 
             $isAdmin = $this->auth->isAdmin();
 
-            if (!$isAdmin && $page->getUserId() !== $user['id']) {
+            if (!$isAdmin && $page->getUserId() !== $user->getId()) {
                 $this->render('error', ['message' => 'Vous ne pouvez pas modifier cette page.']);
                 return;
             }
@@ -141,15 +139,30 @@ class PageController extends AbstractController {
                     $content[$placeholder] = $this->getInput($placeholder);
                 }
 
-                $page->setName($this->getInput('name'));
-                $page->setSlug($this->getInput('slug'), $this->pageRepo);
-                $page->setContent($content);
+                $pageInputDTO = new PageInputDTO(
+                    $this->getInput('name'),
+                    $this->getInput('slug'),
+                    $content,
+                    $user->getId(),
+                    $template->getId()
+                );
 
-                $this->pageRepo->save($page);
-                $this->redirect("/page/" . $page->getSlug());
+                $this->pageRepo->update($page->getId(), $pageInputDTO);
+                $this->redirect("/page/" . $pageInputDTO->getSlug());
             }
 
-            $this->render('pagesCreation', ['page' => $page, 'placeholders' => $placeholders, 'template' => $template]);
+            $pageDTO = new PageDTO(
+                $page->getName(),
+                $page->getContent(),
+                $page->getUserId(),
+                $page->getTemplateId(),
+                $page->getSlug(),
+                $page->getId(),
+                $page->getCreatedAt(),
+                $page->getUpdatedAt()
+            );
+
+            $this->render('pagesCreation', ['page' => $pageDTO, 'placeholders' => $placeholders, 'template' => $template]);
         } catch (Exception $e) {
             $this->render('error', ['message' => "Erreur lors de la modification de la page : " . $e->getMessage()]);
         }

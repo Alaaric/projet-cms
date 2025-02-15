@@ -2,6 +2,9 @@
 
 namespace App\Controllers;
 
+use App\DTO\UserDTO;
+use App\DTO\PageDTO;
+use App\DTO\Inputs\TemplateInputDTO;
 use App\Repositories\UserRepository;
 use App\Repositories\PageRepository;
 use App\Repositories\TemplateRepository;
@@ -31,7 +34,26 @@ class AdminController extends AbstractController {
             $users = $this->userRepo->findAll();
             $template = $this->templateRepo->findAll()[0];
 
-            $this->render('dashboard', ['pages' => $pages, 'users' => $users, 'template' => $template]);
+            $pageDTOs = array_map(fn($page) => new PageDTO(
+                $page->getName(),
+                $page->getContent(),
+                $page->getUserId(),
+                $page->getTemplateId(),
+                $page->getSlug(),
+                $page->getId(),
+                $page->getCreatedAt(),
+                $page->getUpdatedAt()
+            ), $pages);
+
+            $userDTOs = array_map(fn($user) => new UserDTO(
+                $user->getEmail(),
+                $user->getUsername(),
+                $user->getRole(),
+                $user->getId(),
+                $user->getCreatedAt()
+            ), $users);
+
+            $this->render('dashboard', ['pages' => $pageDTOs, 'users' => $userDTOs, 'template' => $template]);
         } catch (Exception $e) {
             $this->render('error', ['message' => "Erreur lors de l'affichage du tableau de bord : " . $e->getMessage(), 'code' => 500]);
         }
@@ -52,12 +74,12 @@ class AdminController extends AbstractController {
             }
 
             $admin = $this->auth->getUser();
-            if (!$admin || $admin['role'] !== 'admin') {
+            if (!$admin || $admin->getRole() !== 'admin') {
                 $this->render('error', ['message' => "Vous devez être admin pour faire cela.", 'code' => 403]);
                 return;
             }
 
-            $this->pageRepo->reassignPages($userId, $admin['id']);
+            $this->pageRepo->reassignPages($userId, $admin->getId());
             $this->userRepo->delete($userId);
             $this->redirect('/admin/dashboard');
         } catch (Exception $e) {
@@ -97,8 +119,11 @@ class AdminController extends AbstractController {
 
             if ($this->isRequestMethod('POST')) {
                 $templateStructure = $this->getInput('template_structure');
-                $template->setStructure($templateStructure);
-                $this->templateRepo->save($template);
+                $templateInputDTO = new TemplateInputDTO(
+                    $template->getName(),
+                    $templateStructure
+                );
+                $this->templateRepo->update($template->getId(), $templateInputDTO);
                 $this->redirect('/admin/dashboard');
             }
 

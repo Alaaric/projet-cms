@@ -3,8 +3,7 @@
 require_once __DIR__ . "/../vendor/autoload.php";
 
 use App\Repositories\UserRepository;
-use App\Entities\User;
-
+use App\DTO\Inputs\UserInputDTO;
 
 function input(string $message) {
     echo $message . "\n";
@@ -30,7 +29,7 @@ function selectOption(string $message, array $options): string {
 
 $userRepo = new UserRepository();
 
-echo "\n Création d'un nouvel utilisateur\n";
+echo "\nCréation d'un nouvel utilisateur\n";
 
 do {
     $email = input("Email");
@@ -58,13 +57,13 @@ $role = selectOption("Sélectionnez un rôle :", [
     2 => "admin"
 ]);
 
-$user = new User(
+$userInputDTO = new UserInputDTO(
     email: $email,
     username: $username,
     password: $hashedPassword,
-    role: $role,
+    role: $role
 );
 
-$userRepo->save($user);
+$userRepo->save($userInputDTO);
 
 echo "Utilisateur '$username' ($role) créé avec succès !\n";

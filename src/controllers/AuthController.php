@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\DTO\UserDTO;
 use App\Repositories\UserRepository;
 use Exception;
 
@@ -20,6 +21,7 @@ class AuthController extends AbstractController {
                 if ($user && password_verify($this->getInput('password'), $user->getPassword())) {
                     $_SESSION['user'] = [
                         'id' => $user->getId(),
+                        'email' => $user->getEmail(),
                         'username' => $user->getUsername(),
                         'role' => $user->getRole(),
                     ];
@@ -45,8 +47,16 @@ class AuthController extends AbstractController {
         }
     }
 
-    public function getUser(): ?array {
-        return $_SESSION['user'] ?? null;
+    public function getUser(): ?UserDTO {
+        if (isset($_SESSION['user'])) {
+            return new UserDTO(
+                $_SESSION['user']['email'],
+                $_SESSION['user']['username'],
+                $_SESSION['user']['role'],
+                $_SESSION['user']['id']
+            );
+        }
+        return null;
     }
 
     public function isAdmin(): bool {
