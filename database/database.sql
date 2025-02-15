@@ -24,7 +24,7 @@ CREATE TABLE templates (
 
 CREATE TABLE pages (
     id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
-    title VARCHAR(255) NOT NULL,
+    name VARCHAR(255) NOT NULL,
     slug VARCHAR(255) UNIQUE NOT NULL,
     content TEXT NOT NULL,
     user_id CHAR(36) NOT NULL,

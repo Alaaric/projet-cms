@@ -2,7 +2,10 @@
 <ul>
     <?php foreach ($pages as $page): ?>
         <li>
-            <strong><?= $page->getTitle() ?></strong>
+            <hr>
+            <strong><?= $page->getName() ?></strong>
+            <p>crée le : <?= $page->getCreatedAt() ?></p>
+            <p>dernière modification le : <?= $page->getUpdatedAt()?></p>
             <a href=<?= "/page/" . $page->getSlug() ?> class="btn yes">Voir la page</a>
             <?php if (isset($_SESSION['user']) && $_SESSION['user']['id'] === $page->getUserId()): ?>
                 <a href="/page/edit/<?= $page->getSlug() ?>" class="btn yes">Modifier la page</a>

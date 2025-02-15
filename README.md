@@ -65,6 +65,14 @@ Pour créer un nouvel utilisateur, exécutez le script suivant :
 php cli/create-user.php
 ```
 
+### Lancer le serveur
+
+Pour lancer le serveur local:
+
+```
+php -S localhost:8000 -t public
+```
+
 ## Structure du projet
 
 - `src/` : Contient les fichiers source de l'application.

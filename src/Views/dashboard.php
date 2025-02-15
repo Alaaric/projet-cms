@@ -28,7 +28,7 @@ $tinymceApiKey = $_ENV["TINYMCE_API_KEY"];
         <?php foreach ($pages as $page): ?>
             <tr>
                 <td><?= $page->getId() ?></td>
-                <td><?= $page->getTitle() ?></td>
+                <td><?= $page->getName() ?></td>
                 <td><?= $page->getSlug() ?></td>
                 <td>Utilisateur #<?= $page->getUserId() ?></td>
                 <td>

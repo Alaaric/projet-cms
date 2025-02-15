@@ -66,7 +66,7 @@ class Router
             return true;
         }
 
-        if ($requiredAuth === 'admin' && $_SESSION['user']['role'] === 'admin') {
+        if ($requiredAuth === 'admin' && isset($_SESSION['user']) && $_SESSION['user']['role'] === 'admin') {
             return true;
         }
 
@@ -76,10 +76,11 @@ class Router
     private function renderError(string $message, int $statusCode)
     {
         http_response_code($statusCode);
-        if ($statusCode === 404) {
-            require_once "../src/Views/404.php";
-        } else {
-            require_once "../src/Views/error.php";
-        }
+        $view = match ($statusCode) {
+            403 => "../src/Views/403.php",
+            404 => "../src/Views/404.php",
+            default => "../src/Views/error.php",
+        };
+        require_once $view;
     }
 }

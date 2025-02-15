@@ -13,7 +13,7 @@ $tinymceApiKey = $_ENV["TINYMCE_API_KEY"];
 
 <form method="POST">
     <label>Nom de votre page :</label>
-    <input type="text" name="title" value="<?= isset($page) ? htmlspecialchars($page->getTitle()) : '' ?>" required>
+    <input type="text" name="name" value="<?= isset($page) ? htmlspecialchars($page->getName()) : '' ?>" required>
 
     <label>Slug :</label>
     <input type="text" name="slug" value="<?= isset($page) ? htmlspecialchars($page->getSlug()) : '' ?>" required>

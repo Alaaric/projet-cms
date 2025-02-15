@@ -6,7 +6,7 @@ use App\Repositories\PageRepository;
 
 class Page {
     public function __construct(
-        private string $title,
+        private string $name,
         private array $content,
         private string $userId,
         private string $templateId,
@@ -20,12 +20,12 @@ class Page {
         return $this->id;
     }
 
-    public function getTitle(): string {
-        return $this->title;
+    public function getName(): string {
+        return $this->name;
     }
 
-    public function setTitle(string $title): void {
-        $this->title = $title;
+    public function setName(string $name): void {
+        $this->name = $name;
     }
 
     public function getContent(): array {

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= htmlspecialchars($page->getTitle()) ?></title>
+    <title><?= htmlspecialchars($page->getName()) ?></title>
     <link rel="stylesheet" href="/css/page-styles.css">
 </head>
 <body>
