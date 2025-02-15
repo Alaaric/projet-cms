@@ -1,6 +1,17 @@
 # Projet CMS
 
-Ce projet est un CMS (Content Management System) simple développé en PHP avec une architecture MVC. Il permet de créer, modifier et supprimer des pages, ainsi que de gérer les utilisateurs.
+Ce projet est un CMS (Content Management System) simple développé en PHP avec une architecture MVC.
+
+Le temps de développement étant assez court, voici une liste non exhaustive des choses manquantes ou inachevées :
+
+- Le CSS n'est pas complètement implémenté et peut sembler bancal ou incomplet sur certaines pages.
+- Actuellement, les routes utilisent les méthodes POST au lieu des méthodes PUT et DELETE pour les opérations de mise à jour et de suppression. Cela ne respecte pas les conventions REST, mais nous n'avions pas le temps de retravailler cela.
+- La validation des formulaires côté client et côté serveur est minimale voire inexistante.
+- La gestion des erreurs pourrait être améliorée pour fournir des messages d'erreur plus clairs et plus utiles.
+- Aucun test unitaire n'a été implémenté.
+- Très peu de mesures de sécurité ont été mises en place.
+- Le versioning de la base de données n'est pas implémenté.
+- La création d'utilisateur via un formulaire web n'est pas implémentée et doit être réalisée via des scripts CLI.
 
 ## Prérequis
 
