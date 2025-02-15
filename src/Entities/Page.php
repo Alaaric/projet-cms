@@ -24,16 +24,8 @@ class Page {
         return $this->name;
     }
 
-    public function setName(string $name): void {
-        $this->name = $name;
-    }
-
     public function getContent(): array {
         return $this->content;
-    }
-
-    public function setContent(array $content): void {
-        $this->content = $content;
     }
 
     public function getUserId(): string {
@@ -54,18 +46,5 @@ class Page {
 
     public function getSlug(): ?string {
         return $this->slug;
-    }
-
-    public function setSlug(string $slug, PageRepository $pageRepo): void {
-        $baseSlug = strtolower(trim(preg_replace('/[^a-zA-Z0-9]+/', '-', $slug), '-'));
-        $slug = $baseSlug;
-        $counter = 1;
-
-        while ($pageRepo->slugExists($slug, $this->id)) {
-            $slug = $baseSlug . '-' . $counter;
-            $counter++;
-        }
-
-        $this->slug = $slug;
     }
 }

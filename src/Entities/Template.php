@@ -18,16 +18,8 @@ class Template {
         return $this->name;
     }
 
-    public function setName(string $name): void {
-        $this->name = $name;
-    }
-
     public function getStructure(): string {
         return $this->structure;
-    }
-
-    public function setStructure(string $structure): void {
-        $this->structure = $structure;
     }
 
     public function getCreatedAt(): ?string {

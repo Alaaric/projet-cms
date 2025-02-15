@@ -78,6 +78,12 @@ class PageController extends AbstractController {
                     return;
                 }
 
+                $slug = $this->getInput('slug');
+                if ($this->pageRepo->slugExists($slug)) {
+                    $this->render('error', ['message' => 'Le slug existe déjà. Veuillez en choisir un autre.']);
+                    return;
+                }
+
                 $content = [];
                 foreach ($placeholders as $placeholder) {
                     $content[$placeholder] = $this->getInput($placeholder);
@@ -85,7 +91,7 @@ class PageController extends AbstractController {
 
                 $pageInputDTO = new PageInputDTO(
                     $this->getInput('name'),
-                    $this->getInput('slug'),
+                    $slug,
                     $content,
                     $user->getId(),
                     $template->getId()
@@ -103,7 +109,7 @@ class PageController extends AbstractController {
 
     public function edit(string $slug): void {
         try {
-
+            
             $user = $this->auth->getUser();
             if (!$user) {
                 $this->render('403', ['message' => 'Vous devez être connecté pour modifier une page.']);
@@ -134,6 +140,12 @@ class PageController extends AbstractController {
             $placeholders = $matches[1];
 
             if ($this->isRequestMethod('POST')) {
+                $newSlug = $this->getInput('slug');
+                if ($this->pageRepo->slugExists($newSlug, $page->getId())) {
+                    $this->render('error', ['message' => 'Le slug existe déjà. Veuillez en choisir un autre.']);
+                    return;
+                }
+
                 $content = [];
                 foreach ($placeholders as $placeholder) {
                     $content[$placeholder] = $this->getInput($placeholder);
@@ -141,7 +153,7 @@ class PageController extends AbstractController {
 
                 $pageInputDTO = new PageInputDTO(
                     $this->getInput('name'),
-                    $this->getInput('slug'),
+                    $newSlug,
                     $content,
                     $user->getId(),
                     $template->getId()
