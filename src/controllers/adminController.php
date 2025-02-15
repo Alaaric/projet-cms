@@ -61,7 +61,7 @@ class AdminController extends AbstractController {
         try {
             AuthMiddleware::checkAdmin();
 
-            $userId = $this->getInput('user_id');
+            $userId = $this->getInput(self::INPUT_KEY_USER_ID);
             $user = $this->userRepo->findById($userId);
             if (!$user) {
                 $this->render('error', ['message' => "Utilisateur introuvable.", 'code' => 404]);
@@ -86,7 +86,7 @@ class AdminController extends AbstractController {
         try {
             AuthMiddleware::checkAdmin();
 
-            $slug = $this->getInput('slug');
+            $slug = $this->getInput(self::INPUT_KEY_SLUG);
             $page = $this->pageRepo->findBySlug($slug);
             if (!$page) {
                 $this->render('404');
@@ -106,7 +106,7 @@ class AdminController extends AbstractController {
 
             $template = $this->templateRepo->findAll()[0];
 
-            if ($this->isRequestMethod('POST')) {
+            if ($this->isRequestMethod(self::METHOD_POST)) {
                 $templateStructure = $this->getInput('template_structure');
                 $templateInputDTO = new TemplateInputDTO(
                     $template->getName(),

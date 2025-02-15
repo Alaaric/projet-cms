@@ -16,11 +16,10 @@ class AuthController extends AbstractController {
 
     public function login(): void {
         try {
-            if ($this->isRequestMethod('POST')) {
+            if ($this->isRequestMethod(self::METHOD_POST)) {
                 $user = $this->userRepo->findByEmail($this->getInput('email'));
-
                 if ($user && password_verify($this->getInput('password'), $user->getPassword())) {
-                    $_SESSION['user'] = [
+                    $_SESSION[self::USER] = [
                         'id' => $user->getId(),
                         'email' => $user->getEmail(),
                         'username' => $user->getUsername(),
@@ -51,12 +50,12 @@ class AuthController extends AbstractController {
     }
 
     public function getUser(): ?UserDTO {
-        if (isset($_SESSION['user'])) {
+        if (isset($_SESSION[self::USER])) {
             return new UserDTO(
-                $_SESSION['user']['email'],
-                $_SESSION['user']['username'],
-                $_SESSION['user']['role'],
-                $_SESSION['user']['id']
+                $_SESSION[self::USER]['email'],
+                $_SESSION[self::USER]['username'],
+                $_SESSION[self::USER]['role'],
+                $_SESSION[self::USER]['id']
             );
         }
         return null;

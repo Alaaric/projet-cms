@@ -9,6 +9,15 @@ use App\Exceptions\Controllers\InputException;
 
 abstract class AbstractController
 {
+    const METHOD_POST = 'POST';
+    const METHOD_PUT = 'PUT';
+    const METHOD_DELETE = 'DELETE';
+
+    const USER = 'user';
+    const INPUT_KEY_NAME = 'name';
+    const INPUT_KEY_SLUG = 'slug';
+    const INPUT_KEY_USER_ID = 'user_id';
+
     protected function render(string $view, array $data = [])
     {
         try {

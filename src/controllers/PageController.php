@@ -40,11 +40,11 @@ class PageController extends AbstractController {
                 return;
             }
 
-            $template = $this->templateRepo->findById($page->getTemplateId());
-            if (!$template) {
-                $this->render('error', ['message' => 'Template non trouvé.']);
-                return;
-            }
+            // $template = $this->templateRepo->findById($page->getTemplateId());
+            // if (!$template) {
+            //     $this->render('error', ['message' => 'Template non trouvé.']);
+            //     return;
+            // }
 
             extract(['page' => $page]);
             require_once '../src/Views/page.php';
@@ -73,7 +73,7 @@ class PageController extends AbstractController {
             preg_match_all('/{{(.*?)}}/', $template->getStructure(), $matches);
             $placeholders = $matches[1];
 
-            if ($this->isRequestMethod('POST')) {
+            if ($this->isRequestMethod(self::METHOD_POST)) {
                 $existingUser = $this->userRepo->findById($user->getId());
                 if (!$existingUser) {
                     $this->render('error', ['message' => 'Utilisateur non trouvé.']);
@@ -86,8 +86,8 @@ class PageController extends AbstractController {
                 }
 
                 $pageInputDTO = new PageInputDTO(
-                    $this->getInput('name'),
-                    $this->getInput('slug'),
+                    $this->getInput(self::INPUT_KEY_NAME),
+                    $this->getInput(self::INPUT_KEY_SLUG),
                     $content,
                     $user->getId(),
                     $template->getId()
@@ -120,7 +120,6 @@ class PageController extends AbstractController {
             }
 
             if (!AuthMiddleware::isAdmin() && !AuthMiddleware::isOwner($page->getId())) {
-
                 $this->render('error', ['message' => 'Vous ne pouvez pas modifier cette page.']);
                 return;
             }
@@ -135,15 +134,15 @@ class PageController extends AbstractController {
             preg_match_all('/{{(.*?)}}/', $template->getStructure(), $matches);
             $placeholders = $matches[1];
 
-            if ($this->isRequestMethod('POST')) {
+            if ($this->isRequestMethod(self::METHOD_POST)) {
                 $content = [];
                 foreach ($placeholders as $placeholder) {
                     $content[$placeholder] = $this->getInput($placeholder);
                 }
 
                 $pageInputDTO = new PageInputDTO(
-                    $this->getInput('name'),
-                    $this->getInput('slug'),
+                    $this->getInput(self::INPUT_KEY_NAME),
+                    $this->getInput(self::INPUT_KEY_SLUG),
                     $content,
                     $user->getId(),
                     $template->getId()
